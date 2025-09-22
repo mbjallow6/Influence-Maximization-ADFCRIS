@@ -1,0 +1,68 @@
+# ADFCRIS Conda Environment - STAGE 1 (Core Dependencies)
+# This environment is built with Mamba and provides the stable base for the project.
+# PyTorch Geometric is installed separately via pip in the setup script for robustness.
+
+name: adfcris
+channels:
+  - pytorch
+  - nvidia
+  - conda-forge
+  - defaults
+dependencies:
+  # Python and Core Essentials
+  - python=3.9
+  - pip
+
+  # High-Performance Scientific Computing
+  - numpy>=1.21.0
+  - scipy>=1.7.0
+  - pandas>=1.3.0
+  - networkx>=2.8.0
+
+  # Machine Learning & GPU Acceleration
+  # Let Mamba solve for PyTorch and its CUDA dependency.
+  - pytorch>=1.12.0
+  - pytorch-cuda=12.1
+  - scikit-learn>=1.1.0
+  - numba>=0.56.0
+
+  # Parallel and Distributed Computing
+  - ray-default>=2.0.0
+  - dask>=2022.8.0
+  - joblib>=1.1.0
+
+  # System & Memory Tools
+  - psutil>=5.8.0
+  - htop
+  - gpustat
+
+  # Visualization
+  - matplotlib>=3.5.0
+  - seaborn>=0.11.0
+  - plotly>=5.10.0
+
+  # Development, Testing & Documentation
+  - jupyterlab>=3.4.0
+  - ipykernel
+  - black>=22.0.0
+  - flake8>=5.0.0
+  - pytest>=7.0.0
+  - pre-commit>=2.20.0
+  - sphinx>=5.0.0
+  - sphinx-rtd-theme>=1.0.0
+
+  # Version Control & Data Management
+  - git-lfs
+  - dvc>=2.12.0
+  - graph-tool
+
+  # Pip-managed packages (excluding PyG, which is handled in the script)
+  - pip:
+    - wandb>=0.13.0
+    - mlflow>=1.28.0
+    - hydra-core>=1.2.0
+    - optuna>=3.0.0
+    - memory_profiler>=0.60.0
+    - line-profiler
+    - py-spy
+    - python-igraph

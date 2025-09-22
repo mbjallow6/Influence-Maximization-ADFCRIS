@@ -1,0 +1,5 @@
+__pycache__/, *.py[cod], .Python, *.so, *.egg-info/, dist/, build/, venv/, env/
+.ipynb_checkpoints/, .idea/, .vscode/, *.swp
+data/, *.pkl, *.h5, *.hdf5, *.pt, *.pth, *.npz
+experiments/results/, *.log, logs/, .wandb/, mlruns/
+.DS_Store, Thumbs.db, *.tmp, .env, *.key, *.log
