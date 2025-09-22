@@ -14,7 +14,7 @@ install: ## Install the project package in editable mode
 	$(CONDA_RUN) pip install -e .
 
 test: ## Run the pytest test suite
-	$(CONDA_RUN) pytest tests/ -v
+	$(CONDA_RUN) pytest --cov=src/adfcris tests/ -v
 
 format: ## Format code with black
 	$(CONDA_RUN) black src/ tests/

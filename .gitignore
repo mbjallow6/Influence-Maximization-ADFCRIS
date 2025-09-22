@@ -1,5 +1,50 @@
-__pycache__/, *.py[cod], .Python, *.so, *.egg-info/, dist/, build/, venv/, env/
-.ipynb_checkpoints/, .idea/, .vscode/, *.swp
-data/, *.pkl, *.h5, *.hdf5, *.pt, *.pth, *.npz
-experiments/results/, *.log, logs/, .wandb/, mlruns/
-.DS_Store, Thumbs.db, *.tmp, .env, *.key, *.log
+# ============== Python ==============
+__pycache__/
+*.py[cod]
+*.so
+
+# ============== Environment & Packaging ==============
+.env
+.venv
+env/
+venv/
+dist/
+build/
+*.egg-info/
+
+# ============== IDEs & Editor Files ==============
+.idea/
+.vscode/
+*.swp
+
+# ============== Testing & Caching ==============
+.pytest_cache/
+.coverage
+
+# ============== Data & Models (Track folders with .gitkeep, not content) ==============
+# Ignore all files in these directories
+data/raw/*
+data/processed/*
+data/synthetic/*
+# But don't ignore the directories themselves, or .gitkeep files
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!data/synthetic/.gitkeep
+# Ignore specific large file types anywhere
+*.pkl
+*.h5
+*.hdf5
+*.pt
+*.pth
+*.npz
+
+# ============== Logs & Experiment Results ==============
+experiments/results/
+logs/
+*.log
+mlruns/
+.wandb/
+
+# ============== OS-specific Files ==============
+.DS_Store
+Thumbs.db

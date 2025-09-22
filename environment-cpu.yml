@@ -1,0 +1,9 @@
+# ADFCRIS Conda Environment - STAGE 1 (CPU-only)
+name: adfcris
+channels:
+  - pytorch
+  - conda-forge # nvidia channel not needed
+dependencies:
+  - python=3.9
+  - pip
+  - pytorch::pytorch-cpu>=2.1.0 # Specifically requests the CPU build
