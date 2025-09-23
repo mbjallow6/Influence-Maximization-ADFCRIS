@@ -38,7 +38,7 @@ if [ -f /proc/meminfo ]; then
     if [ "$total_mem_kb" -gt 8000000 ]; then
         echo "RAM: High (>8GB)"
     elif [ "$total_mem_kb" -gt 4000000 ]; then
-        echo "RAM: Medium (4-8GB)" 
+        echo "RAM: Medium (4-8GB)"
     elif [ "$total_mem_kb" -gt 2000000 ]; then
         echo "RAM: Low (2-4GB)"
     else
@@ -129,7 +129,7 @@ if python3 -m venv --help &>/dev/null 2>&1; then
 fi
 
 if command -v virtualenv &>/dev/null; then
-    echo "✓ Virtualenv: Available" 
+    echo "✓ Virtualenv: Available"
     ((isolation_methods++))
 fi
 

@@ -69,12 +69,12 @@ create_feature() {
         print_error "Feature name is required. Usage: ./adfcris-workflow.sh feature <name>"
         exit 1
     fi
-    
+
     local branch_name="${FEATURE_PREFIX}${feature_name}"
     print_header "🌿 CREATING NEW FEATURE: $branch_name"
-    
+
     start_day # Always start from an up-to-date main branch
-    
+
     print_info "Creating and switching to new branch..."
     git checkout -b "$branch_name"
     print_success "Ready to work on feature '$branch_name'."
@@ -83,7 +83,7 @@ create_feature() {
 save_work() {
     local commit_message=${1:-"WIP: Save progress"}
     print_header "💾 SAVING WORK"
-    
+
     if ! git diff-index --quiet HEAD --; then
         git add -A
         git commit -m "$commit_message"
@@ -91,7 +91,7 @@ save_work() {
     else
         print_info "No changes to commit."
     fi
-    
+
     print_info "Pushing to remote..."
     git push -u $REMOTE_NAME $(get_current_branch)
     print_success "Work pushed to GitHub!"
@@ -100,12 +100,12 @@ save_work() {
 create_pr() {
     local current_branch=$(get_current_branch)
     local pr_title=${1:-"feat: ${current_branch#$FEATURE_PREFIX}"}
-    
+
     print_header "📬 CREATING PULL REQUEST"
-    
+
     # Save any final changes before creating the PR
     save_work "Ready for review: ${pr_title}"
-    
+
     # Best Practice: Run tests before opening a PR
     print_info "Running project tests..."
     if make test; then
@@ -114,10 +114,10 @@ create_pr() {
         print_error "Tests failed! Please fix them before creating a pull request."
         exit 1
     fi
-    
+
     print_info "Creating pull request on GitHub..."
     gh pr create --title "$pr_title" --body "PR for the ${current_branch#$FEATURE_PREFIX} feature." --base $MAIN_BRANCH
-    
+
     print_success "Pull request created!"
     gh pr view --web
 }
@@ -125,13 +125,13 @@ create_pr() {
 complete_feature() {
     local current_branch=$(get_current_branch)
     print_header "🎉 COMPLETING FEATURE"
-    
+
     print_info "Merging pull request via GitHub CLI..."
     gh pr merge "$current_branch" --squash --delete-branch
-    
+
     # Go back to main and clean up
     start_day
-    
+
     print_success "Feature '$current_branch' has been merged and cleaned up!"
 }
 
@@ -139,10 +139,10 @@ complete_feature() {
 main() {
     check_git_repo
     check_github_cli
-    
+
     local command=${1:-help}
     shift || true
-    
+
     case $command in
         start) start_day ;;
         feature) create_feature "$1" ;;

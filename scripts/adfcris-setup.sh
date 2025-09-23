@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # =============================================================================
-# ADFCRIS: Hardware-Aware Project Setup Script (v4 - FINAL)
+# ADFCRIS: Hardware-Aware Project Setup Script (v4.2 - FINAL)
 # =============================================================================
 # Detects GPU presence and uses a 3-stage installation for speed and reliability.
 # Creates a complete, professional research project structure from scratch.
@@ -18,7 +18,7 @@ ENV_FILE=""
 CUDA_VERSION=""
 
 # --- Pretty Printing ---
-RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'; BLUE='\033[0;34m'; NC='\033[0m'
+RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'; BLUE='\033[0;34m'; CYAN='\033[0;36m'; NC='\033[0m'
 print_header() { echo -e "\n${BLUE}=== $1 ===${NC}"; }
 print_success() { echo -e "${GREEN}✅ $1${NC}"; }
 print_info() { echo -e "${CYAN}ℹ️  $1${NC}"; }
@@ -114,15 +114,74 @@ function configure_git() {
     if [ ! -d .git ]; then
         git init && git branch -M main
     fi
-    # The .gitignore is now assumed to be created by the user or create_dev_tools
     print_info "Setting up Git LFS..."
-    git lfs install
-    git lfs track "*.h5" "*.hdf5" "*.pkl" "*.pt" "*.pth" "*.npz"
+    # Activate conda env in a subshell to ensure git-lfs is found
+    # Temporarily disable 'set -u' to prevent MKL script error
+    (
+        set +u
+        source "${HOME}/miniconda3/etc/profile.d/conda.sh"
+        conda activate "$CONDA_ENV_NAME"
+        set -u
+        git lfs install
+        git lfs track "*.h5" "*.hdf5" "*.pkl" "*.pt" "*.pth" "*.npz"
+    )
     print_success "Git configured."
 }
 
 function create_dev_tools() {
     print_header "CREATING DEVELOPMENT FILES"
+
+    print_info "Creating .gitignore..."
+    cat > .gitignore << 'EOF'
+# ============== Python ==============
+__pycache__/
+*.py[cod]
+*.so
+
+# ============== Environment & Packaging ==============
+.env
+.venv
+env/
+venv/
+dist/
+build/
+*.egg-info/
+
+# ============== IDEs & Editor Files ==============
+.idea/
+.vscode/
+*.swp
+.ipynb_checkpoints/
+
+# ============== Testing & Caching ==============
+.pytest_cache/
+.coverage
+
+# ============== Data & Models (Track folders with .gitkeep, not content) ==============
+data/raw/*
+data/processed/*
+data/synthetic/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!data/synthetic/.gitkeep
+*.pkl
+*.h5
+*.hdf5
+*.pt
+*.pth
+*.npz
+
+# ============== Logs & Experiment Results ==============
+experiments/results/
+logs/
+*.log
+mlruns/
+.wandb/
+
+# ============== OS-specific Files ==============
+.DS_Store
+Thumbs.db
+EOF
 
     print_info "Creating Makefile..."
     cat > Makefile << 'EOF'
@@ -196,9 +255,12 @@ EOF
 
 function finalize_setup() {
     print_header "FINALIZING SETUP"
+    # Temporarily disable 'set -u' to prevent MKL script error
     (
+        set +u
         source "${HOME}/miniconda3/etc/profile.d/conda.sh"
         conda activate "$CONDA_ENV_NAME"
+        set -u
         print_info "Installing pre-commit hooks..."
         pre-commit install
         print_info "Installing 'adfcris' package in editable mode..."
